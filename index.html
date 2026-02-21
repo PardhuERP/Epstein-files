@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>EFTA Dataset 8 Index</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f4f6f8;
+    padding:20px;
+}
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h1{
+    text-align:center;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+    font-size:16px;
+}
+ul{
+    list-style:none;
+    padding:0;
+    columns:3;
+}
+li{
+    margin-bottom:6px;
+}
+a{
+    text-decoration:none;
+    color:#0066cc;
+}
+a:hover{
+    text-decoration:underline;
+}
+.count{
+    margin-bottom:10px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>EFTA DataSet 8 - MP4 Index</h1>
+
+<div class="count" id="fileCount"></div>
+
+<input type="text" id="searchBox" placeholder="Search EFTA number...">
+
+<ul id="linkList"></ul>
+
+</div>
+
+<script>
+
+const baseURL = "https://www.justice.gov/epstein/files/DataSet%208/";
+const list = document.getElementById("linkList");
+
+fetch("files.txt")
+.then(response => response.text())
+.then(data => {
+
+    const files = data.split("\n").map(f => f.trim()).filter(f => f !== "");
+
+    document.getElementById("fileCount").innerText = "Total Files: " + files.length;
+
+    files.forEach(file => {
+        let fullLink = baseURL + file + ".mp4";
+
+        let li = document.createElement("li");
+        li.innerHTML = `<a href="${fullLink}" target="_blank">${file}</a>`;
+        list.appendChild(li);
+    });
+
+});
+
+document.getElementById("searchBox").addEventListener("keyup", function() {
+    let filter = this.value.toUpperCase();
+    let items = list.getElementsByTagName("li");
+
+    for (let i = 0; i < items.length; i++) {
+        let txt = items[i].textContent || items[i].innerText;
+        items[i].style.display = txt.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+    }
+});
+
+</script>
+
+</body>
+</html>
